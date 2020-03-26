@@ -2,6 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
+const request = require('request');
+const axios = require('axios');
+const config = require('config');
 const { check, validationResult } = require('express-validator');
 
 const Profile = require('../../models/Profile');
@@ -106,7 +109,7 @@ router.get('/', async (req, res) => {
     res.json(profiles);
   } catch (err) {
     console.error(err.message);
-    res.send(500).send('Server Error');
+    res.status(500).send('Server Error');
   }
 });
 
@@ -124,7 +127,7 @@ router.get('/user/:user_id', async (req, res) => {
     if (err.kind == 'ObjectId') {
       return res.status(400).json({ msg: 'Profile not found'});
     }
-    res.send(500).send('Server Error');
+    res.status(500).send('Server Error');
   }
 });
 
@@ -140,7 +143,7 @@ router.delete('/', auth, async (req, res) => {
     res.json({ msg: 'User deleted' });
   } catch (err) {
     console.error(err.message);
-    res.send(500).send('Server Error');
+    res.status(500).send('Server Error');
   }
 });
 
@@ -187,7 +190,7 @@ router.put('/experience', [ auth,
     res.json(profile);
   } catch (err) {
     console.error(err.message);
-    res.send(500).send('Server Error');
+    res.status(500).send('Server Error');
   }
 });
 
@@ -206,7 +209,7 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
     return res.json(profile);
   } catch(err) {
     console.error(err.message);
-    res.send(500).send('Server Error');
+    res.status(500).send('Server Error');
   }
 });
 
@@ -254,7 +257,7 @@ router.put('/education', [ auth,
     res.json(profile);
   } catch (err) {
     console.error(err.message);
-    res.send(500).send('Server Error');
+    res.status(500).send('Server Error');
   }
 });
 
@@ -273,7 +276,28 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
     return res.json(profile);
   } catch(err) {
     console.error(err.message);
-    res.send(500).send('Server Error');
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route    GET api/profile/github/:username
+// @desc     Get user repos from github
+// @access   Public
+router.get('/github/:username', async (req, res) => {
+  try {
+    const uri = encodeURI(
+      `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc`
+    );
+    const headers = {
+      'user-agent': 'node.js',
+      Authorization: `token ${config.get('githubToken')}`
+    };
+
+    const response = await axios.get(uri, { headers });
+    return res.json(response.data);
+  } catch (err) {
+    console.error(err.message);
+    return res.status(404).json({ msg: 'No Github profile found' });
   }
 });
 
