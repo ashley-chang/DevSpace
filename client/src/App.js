@@ -5,6 +5,8 @@ import Landing from './components/layout/Landing';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import Alert from './components/layout/Alert';
+import Dashboard from './components/dashboard/Dashboard';
+import PrivateRoute from './components/routing/PrivateRoute';
 import './App.css';
 
 // redux -- combine with react
@@ -32,7 +34,8 @@ const App = () => {
             <Alert />
             <Switch>
               <Route exact path="/register" component={ Register } />
-              <Route exact path="/Login" component={ Login } />
+              <Route exact path="/login" component={ Login } />
+              <PrivateRoute exact path="/dashboard" component={ Dashboard } />
             </Switch>
           </section>
         </Fragment>
