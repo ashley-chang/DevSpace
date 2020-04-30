@@ -21,6 +21,7 @@ const EditProfile = ({ profile: { profile, loading }, createProfile, getCurrentP
   });
 
   const [ displaySocialInputs, toggleSocialInputs ] = useState(false);
+
   useEffect(() => {
     getCurrentProfile();
 
