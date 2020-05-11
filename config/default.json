@@ -1,5 +1,0 @@
-// Default values for application
-{
-  "mongoURI" : "mongodb+srv://dev123:dev123@devspace-3dr5j.mongodb.net/test?retryWrites=true&w=majority",
-  "jwtSecret": "mysecret"
-}
